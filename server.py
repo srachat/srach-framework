@@ -1,7 +1,7 @@
 import socketserver
 
 from core import Request
-from router import url_patterns
+from request_handler import handle_request
 
 
 class BaseTCPHandler(socketserver.BaseRequestHandler):
@@ -10,8 +10,7 @@ class BaseTCPHandler(socketserver.BaseRequestHandler):
 
         data = self.request.recv(4096).strip()  # strip() - Delete spaces
         request = Request(data)
-        view = url_patterns.get(request.url)
-        response = view(request)
+        response = handle_request(request)
         self.request.send(response)
 
 

@@ -1,5 +1,5 @@
 import json
-from typing import Iterator
+from typing import Iterator, Optional, Dict
 
 
 class Request:
@@ -48,3 +48,28 @@ class Request:
             self.body = json.loads(body)
 
 
+class Response:
+    def __init__(self,
+                 request: Request,
+                 status_code: int,
+                 status_text: str,
+                 headers: Optional[Dict[str, str]] = None,
+                 content: Optional[str] = None,
+                 content_type: Optional[str] = None):
+        self.request = request
+        self.status_code = status_code
+        self.status_text = status_text
+        self.headers = headers or {}
+        self.content = content
+        self.content_type = content_type
+
+    def prepare(self) -> bytes:
+        status_line = f"{self.request.version} {self.status_code} {self.status_text}\r\n"
+        headers = "\r\n".join(f"{name}: {value}" for name, value in self.headers.items()) + "\r\n"
+
+        result = status_line + headers
+
+        if self.content:
+            result += f"\r\n{self.content}"
+
+        return result.encode("utf-8")

@@ -17,7 +17,7 @@ class BaseTCPHandler(socketserver.BaseRequestHandler):
 socketserver.ThreadingTCPServer.allow_reuse_address = True
 
 if __name__ == "__main__":
-    with socketserver.ThreadingTCPServer(("", 8200), BaseTCPHandler) as server:
+    with socketserver.ThreadingTCPServer(("", 8300), BaseTCPHandler) as server:
         print("Server started")
         server.serve_forever()
     print("Server stopped")
